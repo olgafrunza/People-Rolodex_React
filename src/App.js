@@ -1,23 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import "./App.css";
+import CardList from "./components/CardList";
+import SearchBox from "./components/SearchBox";
+import data from "./helper/data";
 
 function App() {
+  const people = data.results;
+  const [filteredPeople, setFilteredPeople] = useState(people);
+
+  const onSearch = (e) => {
+    const searcFieldString = e.target.value.toLowerCase();
+
+    const newFilteredPeople = people.filter((person) => {
+      return (
+        person.name.title.toLowerCase().includes(searcFieldString) ||
+        person.name.first.toLowerCase().includes(searcFieldString) ||
+        person.name.last.toLowerCase().includes(searcFieldString)
+      );
+    });
+    setFilteredPeople(newFilteredPeople);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1 className="app-title">People Roledex</h1>
+      <SearchBox
+        placeholder="Search a Person"
+        className="search-box"
+        onChangeHandler={onSearch}
+      />
+      <CardList cards={filteredPeople} />
     </div>
   );
 }
